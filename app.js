@@ -1,21 +1,6 @@
 const express = require('express')
 const app = express()
-
-var mysql      = require('mysql2');
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'abcd'
-});
- 
-connection.connect(function(err) {
-    if (err) {
-      console.error('error connecting: ' + err.stack);
-      return;
-    }
-   
-    console.log('connected as id ' + connection.threadId);
-  });
+const db = require('./database.js')
 
 app.listen('3000')
 
@@ -24,8 +9,13 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/about', (req, res) => {
-    res.send('about')
-  })
+    var sql='SELECT * FROM actor';
+    db.query(sql, function (err, data, fields) {
+    if (err) throw err;
+        res.send(data)
+    })
+    
+})
 
 app.get('/nothing',(req,res)=>{
     res.send('nothing to see')
